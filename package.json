@@ -1,0 +1,13 @@
+{
+  "name": "nodis",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -u bdd -t 5s"
+  },
+  "dependencies": {
+    "thrift":"^0.10.0",
+    "amqplib":"^0.5.1",
+    "async":"^0.9.2"
+  }
+}
