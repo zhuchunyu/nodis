@@ -1,6 +1,6 @@
 var amqp = require('amqplib/callback_api');
 
-amqp.connect('amqp://172.19.3.162', function(err, conn) {
+amqp.connect('amqp://192.168.1.125', function(err, conn) {
     conn.createChannel(function(err, ch) {
         var q = 'task_queue';
         var msg = "Hello Queue!";

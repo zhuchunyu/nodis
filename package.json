@@ -8,6 +8,7 @@
   "dependencies": {
     "thrift":"^0.10.0",
     "amqplib":"^0.5.1",
-    "async":"^0.9.2"
+    "async":"^0.9.2",
+    "elasticsearch":"^13.3.1"
   }
 }
