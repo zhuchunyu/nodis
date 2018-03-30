@@ -24,5 +24,7 @@ pids
 *.seed
 *.map
 
+package-lock.json
+
 gen-java/
 gen-nodejs/
