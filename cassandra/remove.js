@@ -2,9 +2,6 @@ const dse = require('dse-driver')
 const Promise = require('bluebird')
 const client = new dse.Client({ contactPoints: ['172.19.16.67'], keyspace: 'mycas' });
 
-//const cassandra = require('cassandra-driver');
-//const client = new cassandra.Client({ contactPoints: ['172.19.16.67'], keyspace: 'mycas' });
-
 client.on('error', function (err) {
   console.log(err)
 })
@@ -28,14 +25,15 @@ client.execute(query, [ 1 ], { prepare : true }, function (err, result) {
   
   Promise.map(l, function (i) {
     return new Promise(function (resolve) {
-      client.execute('select id,user_name from user where id=?', [ 1 ], { prepare : true }, function (err, result) {
+      client.execute('delete from user where id=?', [ i ], { prepare : true }, function (err, result) {
         if (err) {
           console.log(err)
         }
-        if (i%10000 === 0) {
+        
+        if (i%20000 === 0) {
           console.log(i)
         }
-  
+        
         resolve()
       });
     })
