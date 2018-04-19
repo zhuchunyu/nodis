@@ -26,3 +26,4 @@ pids
 
 gen-java/
 gen-nodejs/
+package-lock.json
