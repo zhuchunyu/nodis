@@ -1,0 +1,161 @@
+/**
+* MCU SDK
+*/
+
+#define PRODUCT_ID "{{ product_id }}"
+
+// 功能点上报定义
+static device_func_info_t dev_upload_list[] = {
+{% for fn in functions %}
+    UPLOAD_{{ fn.type }}("{{ fn.name }}", {{ fn.index }}) {% if not loop.last %} , {% endif %}
+{% endfor %}
+};
+
+static device_cmd_handle_t dev_cmd_list[] = {
+{% for fn in functions %}
+    {% if fn.type != 'ERROR' %}
+        CMD_{{ fn.type }}("{{ fn.name }}") {% if not loop.last %} , {% endif %}
+    {% endif %}
+{% endfor %}
+};
+
+// 功能点上报
+{% for fn in functions %}
+
+{% if fn.type == 'STRING' %}
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload(uint8 *val)
+{
+    return device_upload("{{ fn.name }}", TYPE_STRING, val, strlen(val));
+}
+{% endif %}
+
+{% elif fn.type == 'INT' %}
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload(int32 val)
+{
+    return device_upload("{{ fn.name }}", TYPE_INT, &val, sizeof(val));
+}
+{% endif %}
+
+{% elif fn.type == 'FLOAT' %}
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload(float64 val)
+{
+    return device_upload("{{ fn.name }}", TYPE_FLOAT, &val, sizeof(val));
+}
+{% endif %}
+
+{% elif fn.type == 'ENUM' %}
+typedef enum
+{
+{% for em in fn.enum %}
+    {{ fn.name }}_ENUM_{{ loop.index0 }}{% if not loop.last %} , {% endif %}
+{% endfor %}
+} {{ fn.name }}_enum_t;
+
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload({{ fn.name }}_enum_t val)
+{
+    return device_upload("{{ fn.name }}", TYPE_ENUM, &val, sizeof(val));
+}
+{% endif %}
+
+{% elif fn.type == 'ERROR' %}
+typedef enum
+{
+{% for ex in fn.exception %}
+    ERROR_{{ fn.name }}_{{ loop.index0 }}{% if not loop.last %} , {% endif %}
+{% endfor %}
+} {{ fn.name }}_err_type_t;
+
+{% if fn.up %}
+int32 device_{{ fn.name }}_error({{ fn.name }}_err_type_t type, bool status)
+{
+    device->err_code = status ? SET_BIT_64(device->err_code, type) : CLEAR_BIT_64(device->err_code, type);
+    return device_upload("{{ fn.name }}", TYPE_ERROR, &(device->err_code), sizeof(device->err_code));
+}
+{% endif %}
+
+{% elif fn.type == 'BOOL' %}
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload(bool val)
+{
+    return device_upload("{{ fn.name }}", TYPE_BOOL, &val, sizeof(val));
+}
+{% endif %}
+
+{% elif fn.type == 'BINARY' %}
+{% if fn.up %}
+int32 device_{{ fn.name }}_upload(uint8 *val, uint16 val_len)
+{
+    return device_upload("{{ fn.name }}", TYPE_BINARY, val, sizeof(val));
+}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+
+// 功能点下发
+{% for fn in functions %}
+
+{% if fn.type == 'STRING' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback(uint8 *val)
+{
+    /** To Do*/
+    return 0;
+}
+
+{% endif %}
+
+{% elif fn.type == 'INT' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback(int32 val)
+{
+    /** To Do*/
+    return 0;
+}
+
+{% endif %}
+
+{% elif fn.type == 'FLOAT' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback(float64 val)
+{
+    /** To Do*/
+    return 0;
+}
+
+{% endif %}
+
+{% elif fn.type == 'ENUM' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback({{ fn.name }}_enum_t val)
+{
+    /** To Do*/
+    return 0;
+}
+{% endif %}
+
+{% elif fn.type == 'BOOL' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback(bool val)
+{
+    /** To Do*/
+    return 0;
+}
+
+{% endif %}
+
+{% elif fn.type == 'BINARY' %}
+{% if fn.down %}
+int32 device_{{ fn.name }}_callback(uint8 *val, uint16 val_len)
+{
+    /** To Do*/
+    return 0;
+}
+
+{% endif %}
+{% endif %}
+{% endfor %}

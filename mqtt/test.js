@@ -1,10 +1,10 @@
 const mqtt = require('mqtt')
-const client  = mqtt.connect('mqtt://172.19.16.67:1883', { username: '1001', password: '123456', clientId:'c1001' })
+const client  = mqtt.connect('mqtt://172.19.16.67:1883', { username: 'virtual_device', password: '22d44917-f621-412d-8403-0f4bd7c8dc28', clientId:'19084' })
 
 client.on('connect', function () {
-  client.subscribe('x/g/z')
+  client.subscribe('client/products/19084/devices/+/command')
   setTimeout(function () {
-    client.publish('x/g/z', 'Hello mqtt')
+    client.publish('client/products/19084/devices/+/command', 'Hello mqtt')
   }, 100)
 })
 
