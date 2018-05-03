@@ -7,15 +7,21 @@
 // 功能点上报定义
 static device_func_info_t dev_upload_list[] = {
 {% for fn in functions %}
-    UPLOAD_{{ fn.type }}("{{ fn.name }}", {{ fn.index }}) {% if not loop.last %} , {% endif %}
+    UPLOAD_{{ fn.type }}("{{ fn.name }}", {{ fn.index }}){% if not loop.last %},
+{% else %}
+
+{% endif %}
 {% endfor %}
 };
 
 static device_cmd_handle_t dev_cmd_list[] = {
 {% for fn in functions %}
-    {% if fn.type != 'ERROR' %}
-        CMD_{{ fn.type }}("{{ fn.name }}") {% if not loop.last %} , {% endif %}
-    {% endif %}
+{% if fn.type != 'ERROR' %}
+    CMD_{{ fn.type }}("{{ fn.name }}"){% if not loop.last %},
+{% else %}
+
+{% endif %}
+{% endif %}
 {% endfor %}
 };
 
@@ -50,7 +56,10 @@ int32 device_{{ fn.name }}_upload(float64 val)
 typedef enum
 {
 {% for em in fn.enum %}
-    {{ fn.name }}_ENUM_{{ loop.index0 }}{% if not loop.last %} , {% endif %}
+    {{ fn.name }}_ENUM_{{ loop.index0 }}{% if not loop.last %},
+{% else %}
+
+{% endif %}
 {% endfor %}
 } {{ fn.name }}_enum_t;
 
@@ -65,7 +74,10 @@ int32 device_{{ fn.name }}_upload({{ fn.name }}_enum_t val)
 typedef enum
 {
 {% for ex in fn.exception %}
-    ERROR_{{ fn.name }}_{{ loop.index0 }}{% if not loop.last %} , {% endif %}
+    ERROR_{{ fn.name }}_{{ loop.index0 }}{% if not loop.last %},
+{% else %}
+
+{% endif %}
 {% endfor %}
 } {{ fn.name }}_err_type_t;
 
@@ -89,7 +101,7 @@ int32 device_{{ fn.name }}_upload(bool val)
 {% if fn.up %}
 int32 device_{{ fn.name }}_upload(uint8 *val, uint16 val_len)
 {
-    return device_upload("{{ fn.name }}", TYPE_BINARY, val, sizeof(val));
+    return device_upload("{{ fn.name }}", TYPE_BINARY, val, val_len);
 }
 {% endif %}
 {% endif %}
@@ -98,7 +110,6 @@ int32 device_{{ fn.name }}_upload(uint8 *val, uint16 val_len)
 
 // 功能点下发
 {% for fn in functions %}
-
 {% if fn.type == 'STRING' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback(uint8 *val)
@@ -108,7 +119,6 @@ int32 device_{{ fn.name }}_callback(uint8 *val)
 }
 
 {% endif %}
-
 {% elif fn.type == 'INT' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback(int32 val)
@@ -118,7 +128,6 @@ int32 device_{{ fn.name }}_callback(int32 val)
 }
 
 {% endif %}
-
 {% elif fn.type == 'FLOAT' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback(float64 val)
@@ -128,7 +137,6 @@ int32 device_{{ fn.name }}_callback(float64 val)
 }
 
 {% endif %}
-
 {% elif fn.type == 'ENUM' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback({{ fn.name }}_enum_t val)
@@ -136,8 +144,8 @@ int32 device_{{ fn.name }}_callback({{ fn.name }}_enum_t val)
     /** To Do*/
     return 0;
 }
-{% endif %}
 
+{% endif %}
 {% elif fn.type == 'BOOL' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback(bool val)
@@ -147,7 +155,6 @@ int32 device_{{ fn.name }}_callback(bool val)
 }
 
 {% endif %}
-
 {% elif fn.type == 'BINARY' %}
 {% if fn.down %}
 int32 device_{{ fn.name }}_callback(uint8 *val, uint16 val_len)
