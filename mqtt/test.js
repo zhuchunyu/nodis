@@ -1,5 +1,5 @@
 const mqtt = require('mqtt')
-const client  = mqtt.connect('mqtt://172.19.16.67:1883', { username: 'test03', password: '22d44917-f621-412d-8403-0f4bd7c8dc28', clientId:'1003' })
+const client  = mqtt.connect('mqtt://172.19.16.69:21883', { username: 'test03', password: '22d44917-f621-412d-8403-0f4bd7c8dc28', clientId:'1003' })
 
 client.on('connect', function () {
   client.subscribe('client/products/19084/devices/+/command')
@@ -10,12 +10,14 @@ client.on('connect', function () {
       type: 'STRING',
       value: 'Hello Mqtt'
     }
+    console.time('publish')
     client.publish('client/products/19084/devices/123/command', JSON.stringify(data))
   }, 200)
 })
 
 client.on('message', function (topic, message) {
   // message is Buffer
+  console.timeEnd('publish')
   console.log(message.toString())
   client.end()
 })
