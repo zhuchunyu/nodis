@@ -1,9 +1,9 @@
 const mqtt = require('mqtt')
-const client  = mqtt.connect('mqtt://172.19.16.67:26003', { username: '5b0cbe171d27b12698b1335b', password: '5af655340c9fc7002b667ea4', clientId:'h5_5b05036xx' })
+const client  = mqtt.connect('mqtt://172.19.3.186:26003', { username: 'virtual_debug', password: '5b0e12031ba508002b2fa481', clientId:'h5_5b05036xxxx' })
 
 client.on('connect', function (data) {
   console.log(data)
-  client.subscribe('server/products/22482/devices/SN0001/exception')
+  client.subscribe('client/products/123/devices/321/connection')
   setTimeout(function () {
     const data = {
       task_id: '123',
@@ -12,7 +12,7 @@ client.on('connect', function (data) {
       value: 'Hello Mqtt'
     }
     console.time('publish')
-    client.publish('client/products/22482/devices/SN0001/command', JSON.stringify(data))
+    client.publish('client/products/222/devices/333/command', JSON.stringify(data))
   }, 200)
 })
 

@@ -1,5 +1,5 @@
 const mqtt = require('mqtt')
-const client  = mqtt.connect('mqtt://172.19.16.67:26003', { username: 'virtual_device_22358', password: 'ognwiookfjgykhcp', clientId:'virtual_5b05036230ec10002b1bb651' })
+const client  = mqtt.connect('mqtt://172.19.16.69:51883', { username: 'virtual_device_22523', password: 'bwzkdgdxjvqunwlt', clientId:'virtual_5b0e0fdf0c8568003cfdc377' })
 
 client.on('connect', function (data) {
   console.log(data)
